@@ -221,7 +221,7 @@ constructor(props) {
     //STUDENTS INFORMATIONS
 onSubmitRenderStudents(event) {
     event.preventDefault();
-    this.props.history.push(`/RenderStudents/${this.state.address}`)
+    this.props.history.push(`/RenderStudents/`)
 }
 
   onSubmitCreateStudent(event) {
@@ -248,7 +248,7 @@ onSubmitCreateDiploma(event) {
 
 onSubmitCheckDiplomas(event) {
   event.preventDefault();
-  this.props.history.push(`/CheckDiplomas/${this.state.address}`)
+  this.props.history.push(`/CheckVoyages`)
 }
 
 

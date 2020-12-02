@@ -9,8 +9,9 @@ import { Router, Switch, Route } from 'react-router-dom';
 import  history  from './assets/history';
 import { FunctionsChoice } from './components/FunctionsChoice';
 
-import { RenderDiplomas } from './components/RenderDiplomas';
-import { CreateDiploma } from './components/CreateDiploma';
+import { RenderVoyages } from './components/RenderVoyages';
+import { RenderVoyagesFaits } from './components/RenderVoyagesFaits';
+import { CreateVoyage } from './components/CreateVoyage';
 import { CheckDiplomas } from './components/CheckDiplomas';
 
 import { AddAddress } from './components/AddAddress';
@@ -28,8 +29,9 @@ function App() {
         
 
         
-        <Route path ='/RenderDiplomas' component={RenderDiplomas} />
-        <Route path ='/CreateDiploma' component={CreateDiploma} />
+        <Route path ='/RenderVoyages' component={RenderVoyages} />
+        <Route path ='/RenderVoyagesFaits' component={RenderVoyagesFaits} />
+        <Route path ='/CreateVoyage' component={CreateVoyage} />
         <Route path ='/CheckDiplomas' component={CheckDiplomas} />
 
       

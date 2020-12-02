@@ -1,9 +1,10 @@
 import React, { Component }  from 'react'
 import { createContract } from '../ethereum/SolEvents'
 import { Button, ButtonGroup, Form, Spinner, Modal, ButtonToolbar } from 'react-bootstrap';
-import { web3 } from './../ethereum/web3';
+//import { web3 } from './../ethereum/web3';
 import NavBar from './../assets/NavBar';
 import { PopupAddAddress } from './../assets/PopupAddAddress';
+import Web3 from 'web3'
 
 
 
@@ -13,29 +14,26 @@ export class AddAddress extends Component {
   
 
     state = {
-            lv:0,
             address: '',
             name: '' ,
-            contract: ''
+            contract: '',
+            account:''
     }
 
   async componentDidMount () {
-    const address = this.getDiplomaStorageAddress()
-    const contract = createContract(address)
+
+    window.ethereum.enable();
+    const web3 = new Web3(Web3.givenProvider)
+    const contract = createContract()
+    console.log(web3)
     const accounts = await web3.eth.getAccounts()
     this.setState({ account: accounts[0] })
+    console.log(accounts)
     console.log(this.state.account)
-    const master = await  contract.methods.master().call()
-    console.log('master',master)
-    
     this.setState({ contract })
     console.log(contract)
   }
   
-  getDiplomaStorageAddress () {
-    return this.props.match.params.address
-  }
-
   
 
 constructor(props) {
@@ -46,16 +44,30 @@ constructor(props) {
       address: '',
       name: '',
       contract: '',
-      ModalShow: false,
     }
     this.onChange = this.onChange.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
 }
 
 
-addAddress(lv,address, name) {
-    this.state.contract.methods.addAddress(name, address,lv).send({ from: this.state.account })
-    console.log("Account" , this.state.account)
+async addOwner(address, name) {
+  if(await this.state.contract.methods.isOwner(this.state.account).call() == true){
+    this.state.contract.methods.setOwner(address,name).send({ from: this.state.account })
+  }
+  else{
+    //TODO Remplacer par une pop up
+    console.log("T'as pas les droits ")
+  }
+}
+
+async dlOwner(address, name) {
+  if(await this.state.contract.methods.isOwner(this.state.account).call() == true){
+    this.state.contract.methods.deleteOwner(address).send({ from: this.state.account })
+  }
+  else{
+    //TODO Remplacer par une pop up
+    console.log("T'as pas les droits ")
+  }
 }
 
 
@@ -64,7 +76,6 @@ addAddress(lv,address, name) {
     const target = event.target;
     const value =  target.value;
     const name = target.name;
-    console.log(name,value,this.state) 
     this.setState({
       [name]: value
     });
@@ -73,13 +84,21 @@ addAddress(lv,address, name) {
 
 
     onSubmit(event) {
-    event.preventDefault();
-    this.addAddress(this.state.lv,this.state.address,this.state.name)
+      console.log(event)
+      const value = event.target.value;
+      event.preventDefault();
+      if(value == "add"){
+        console.log(value,'add')
+        this.addOwner(this.state.address,this.state.name)
+      }
+      if(value == "dl"){
+        console.log(value,'dl')
+        this.dlOwner(this.state.address)
+      }
   }
 
 
   render() {
-    let ModalClose =() => this.setState({ModalShow:false})
 
     return (
       <div>
@@ -102,19 +121,10 @@ addAddress(lv,address, name) {
 
 
         <Form>
-            <Form.Group controlId="formGroupEmail">
-                <Form.Label>Level of autorisation</Form.Label>
-                <Form.Control 
-                    placeholder= 'Enter the level'
-                    name="lv"
-                    type="number"
-                    onChange={this.onChange} />
-            </Form.Group>
-            
             <Form.Group controlId="formGroupPassword">
                 <Form.Label>Address</Form.Label>
                 <Form.Control 
-                    placeholder='Enter the address of the acount you want to autorise'
+                    placeholder='Adresse'
                     name="address"
                     type="text"
                     onChange={this.onChange} />
@@ -123,7 +133,7 @@ addAddress(lv,address, name) {
             <Form.Group controlId="formGroupPassword">
                 <Form.Label>name</Form.Label>
                 <Form.Control 
-                    placeholder= 'Enter the Name Of the School'
+                    placeholder= "Nom de l'adresse"
                     name="name"
                     type="text"
                     onChange={this.onChange} />
@@ -134,19 +144,16 @@ addAddress(lv,address, name) {
         <div>
         
       <ButtonToolbar>
-        <Button variant="primary" 
-          onClick={() => this.setState({ModalShow: true})}
+        <Button value="add" variant="primary" 
+          onClick={this.onSubmit}
           >Add Address
         </Button>
+        <Button value="dl" variant="danger" 
+          onClick={this.onSubmit}
+          >Delete Address
+        </Button>
 
-        <PopupAddAddress
-          show={this.state.ModalShow}
-          onHide={ModalClose}
-          onSubmit={this.onSubmit}
-          address={this.state.address}
-          lv = {this.state.lv}
-          schoolName = {this.state.name}
-        />
+       
       </ButtonToolbar> 
 
         </div>

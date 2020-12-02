@@ -10,14 +10,7 @@ import NavBar from './../assets/NavBar';
 export class RenderAddresses extends Component {
 
   state = {
-    owners: {
-        name:'N/A',
-        idStudent: 0,
-        INE: 0,
-        fisrtName: 'N/A',
-        lastName: 'N/A',
-        birth: 0,
-    }
+    owners: [],
 
 }
 async componentDidMount () {
@@ -35,17 +28,14 @@ const accounts = await web3.eth.getAccounts()
 this.setState({ account: accounts[0] })
 
 this.setState({ contract })
-console.log(await contract.methods.isOwner("0xB4aC1c84485cE5C46f560c1428D44cCF5e76515D").call())
 const ownersCount = await contract.methods.ownersCount().call()
-console.log('OC',ownersCount)
 this.setState({ownersCount})
 
 for (var i = 1; i <= ownersCount; i++) {
     const owner = await contract.methods.owners(i).call()
-    console.log(owner)
     if(owner[2] == true){
       this.setState({
-        owners: [...this.state.owners, owner]
+        owners: [...this.state.owners, [owner[0],owner[1]]]
       })
     }
   }
@@ -88,8 +78,8 @@ return (
  <table className="table">
   <thead className="thead-dark">
 <tr>
-  <th scope="col">#</th>
   <th scope="col">Addresse</th>
+  <th scope="col">Tag</th>
 </tr>
 </thead>
 <tbody>
@@ -100,7 +90,7 @@ return (
           
           <div key={key}>
             <td>
-              {key}
+              {owner[0]}
             </td>
           </div>
           
@@ -114,7 +104,7 @@ return (
           
           <div key={key}>
             <td>
-              {owner}
+              {owner[1]}
             </td>
           </div> 
           
