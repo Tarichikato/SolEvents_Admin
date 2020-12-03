@@ -90,21 +90,132 @@ constructor(props) {
     this.onSubmit = this.onSubmit.bind(this);
     
 }
+computeEnvies(){
+  var envies = 1
+  var envies2 = 1
+  if("famille" === this.state.avecqui){
+    envies = envies * 2
+  }
+  if("couple" === this.state.avecqui){
+    envies = envies * 3
+  }
+  if("amis" === this.state.avecqui){
+    envies = envies * 5
+  }
+  if("groupe" === this.state.avecqui){
+    envies = envies * 7
+  }
+  if("direct_eco" === this.state.vol){
+    envies = envies * 11
+  }
+  if("direct_affaire" ===this.state.vol){
+    envies = envies * 13
+  }
+  if("moi_meme" === this.state.vol){
+    envies = envies * 17
+  }
+  if("moins_cher" === this.state.vol){
+    envies = envies * 19
+  }
+  if("bpc" === this.state.confort){
+    envies = envies * 23
+  }
+  if("cc" === this.state.confort){
+    envies = envies * 29
+  }
+  if("luxe" === this.state.confort){
+    envies = envies * 31
+  }
+  if("indiférent" === this.state.pensions){
+    envies = envies * 37
+  }
+  if("sans_repas" ===this.state.pensions){
+    envies = envies * 41
+  }
+  if("petit_dej" === this.state.pensions){
+    envies = envies * 43
+  }
+  if("demi_pension" === this.state.pensions){
+    envies = envies * 47
+  }
+  if(this.state.T1 === true){
+    envies = envies * 53
+  }
+  if(this.state.T2 === true){
+    envies = envies * 59
+  }
+  if(this.state.T3 === true){
+    envies = envies * 61
+  }
+  if(this.state.T4 === true){
+    envies = envies * 67
+  }
+  if(this.state.A1 === true){
+    envies = envies * 71
+  }
+  if(this.state.A2 === true){
+    envies2 = envies2 * 3
+  }
+  if(this.state.A3 === true){
+    envies2 = envies2 * 5
+  }
+  if(this.state.A4 === true){
+    envies2 = envies2 * 7
+  }
+  if(this.state.A5 === true){
+    envies2 = envies2 * 11
+  }
+  if(this.state.A6 === true){
+    envies2 = envies2 * 13
+  }
+  if(this.state.A7 === true){
+    envies2 = envies2 * 17
+  }
+  if(this.state.A8 === true){
+    envies2 = envies2 * 19
+  }
+  if(this.state.A9 === true){
+    envies2 = envies2 * 23
+  }
+  if(this.state.A10 === true){
+    envies2 = envies2 * 29
+  }
+  if(this.state.A11 === true){
+    envies2 = envies2 * 31
+  }
+  if(this.state.A12 === true){
+    envies2 = envies2 * 37
+  }
+  if(this.state.A13 === true){
+    envies2 = envies2 * 41
+  }
+  if(this.state.A14 === true){
+    envies2 = envies2 * 2
+  }
+
+
+  console.log("envies",envies)
+  return([envies,envies2])
+}
+  
+
 
 async createVoyage1(debutsejour,finSejour,pays,ville,hebergementType,accompagnement,idClient,nomClient,prenomClient,testCovid) {
   //TODO calcul de envie
-  var envies = 1
+  var envies = this.computeEnvies()
+  console.log(envies)
   //TODO calcul de participants
-  console.log(this.state.nbadultes,1000 * this.state.nbenfants,1000000*this.state.nbbebes)
   var participants = parseInt(this.state.nbadultes) + 1000 * parseInt(this.state.nbenfants) + 1000000*parseInt(this.state.nbbebes)
   console.log('participants',participants)
-  this.createVoyage(debutsejour,finSejour,participants,pays,ville,hebergementType,accompagnement,envies,idClient,nomClient,prenomClient,testCovid)
+  this.createVoyage(debutsejour,finSejour,participants,pays,ville,hebergementType,accompagnement,envies[0],envies[1],idClient,nomClient,prenomClient,testCovid)
 }
 
 
-async createVoyage(debutsejour,finSejour,participants,pays,ville,hebergementType,accompagnement,envies,idClient,nomClient,prenomClient,testCovid) {
+async createVoyage(debutsejour,finSejour,participants,pays,ville,hebergementType,accompagnement,envies,envies2,idClient,nomClient,prenomClient,testCovid) {
   if(await this.state.contract.methods.isOwner(this.state.account).call() == true){
-    this.state.contract.methods.createVoyage(debutsejour,finSejour,participants,pays,ville,hebergementType,accompagnement,envies,idClient,nomClient,prenomClient,testCovid).send({ from: this.state.account })
+    prenomClient = this.state.prenomClient
+    nomClient = this.state.nomClient
+    this.state.contract.methods.createVoyage(debutsejour,finSejour,participants,pays,ville,hebergementType,accompagnement,envies,envies2,idClient,nomClient,prenomClient,testCovid).send({ from: this.state.account })
   }
   else{
     //TODO Remplacer par une pop up
@@ -129,7 +240,7 @@ async createVoyage(debutsejour,finSejour,participants,pays,ville,hebergementType
     this.setState({
       [name]: value
     });
-    console.log(name,value,this.state)  
+    console.log(this.state)  
 }
 
 onChangeCB(event) {
@@ -139,7 +250,7 @@ onChangeCB(event) {
   const name = target.name;
   console.log("name",name)
   this.setState({[name]: !this.state.[name]})
-  console.log(name,this.state)  
+  console.log(this.state)  
 }
 
 
@@ -147,6 +258,7 @@ onChangeCB(event) {
       event.preventDefault();
       this.setState({ModalShow:false})
       console.log('submited',this.state)
+      console.log(this.state.prenomClient,this.state.nomClient,'STATE')
       this.createVoyage1(
         this.state.debutsejour,
         this.state.finsejour,
@@ -204,7 +316,7 @@ onChangeCB(event) {
             </Form.Group>
 
             <Form.Group controlId="formGroupPassword">
-                <Form.Label>name</Form.Label>
+                <Form.Label>Nombre d'adultes</Form.Label>
                 <Form.Control 
                     placeholder= "Nombre d'adultes"
                     name="nbadultes"
@@ -212,7 +324,7 @@ onChangeCB(event) {
                     onChange={this.onChange} />
             </Form.Group>
             <Form.Group controlId="formGroupPassword">
-                <Form.Label>name</Form.Label>
+                <Form.Label>Nombre d'enfants</Form.Label>
                 <Form.Control 
                     placeholder= "Nombre d'enfants"
                     name="nbenfants"
@@ -220,7 +332,7 @@ onChangeCB(event) {
                     onChange={this.onChange} />
             </Form.Group>
             <Form.Group controlId="formGroupPassword">
-                <Form.Label>name</Form.Label>
+                <Form.Label>Nombre de bébés</Form.Label>
                 <Form.Control 
                     placeholder= "Nombre de bébés"
                     name="nbbebes"
@@ -243,31 +355,43 @@ onChangeCB(event) {
                     type="text"
                     onChange={this.onChange} />
             </Form.Group>
-            <Form.Group controlId="formGroupPassword">
-            <Form.Label>name</Form.Label>
-            <Form.Control 
-                    placeholder= "famille,couple,amis,groupe"
-                    name="name"
-                    type="text"
-                    onChange={this.onChange} />
-            </Form.Group>
 
             <Form.Group controlId="formGroupPassword">
-            <Form.Label>name</Form.Label>
-            <Form.Control 
-                    placeholder= "eco,affaire,moimeme,moinscher"
-                    name="name"
-                    type="text"
-                    onChange={this.onChange} />
+            <Form.Label>Comment voyagez vous ?</Form.Label>
+            <Form.Control as="select" onChange={this.onChange} name="avecqui">
+            <option>...</option>
+               <option value ="famille">En famille</option>
+               <option value ="couple">En couple</option>
+               <option value ="amis">Entre amis</option>
+               <option value ="groupe">En groupe</option>
+            </Form.Control>
+
+            </Form.Group>
+            <Form.Group controlId="formGroupPassword">
+            
+            <Form.Label>Vol</Form.Label>
+            <Form.Control as="select" onChange={this.onChange} name="vol">
+            <option >...</option>
+               <option value ="direct_eco">Vol direct en classe economique</option>
+               <option value ="direct_affaire">Vol direct en classe affaire</option>
+               <option value ="moi_meme">Je réserve moi même mon vol</option>
+               <option value ="moins_cher">Le vol le moins cher possible </option>
+            </Form.Control>
+
             </Form.Group>
 
+
             <Form.Group controlId="formGroupPassword">
-            <Form.Label>name</Form.Label>
-            <Form.Control 
-                    placeholder= "bienpascher,charmeconfort,luxe"
-                    name="name"
-                    type="text"
-                    onChange={this.onChange} />
+            
+
+            
+            <Form.Label>Niveau de confort</Form.Label>
+            <Form.Control as="select" onChange={this.onChange} name="confort">
+            <option >...</option>
+               <option value ="bpc">Bien pas cher</option>
+               <option value ="cc">Charme et confort</option>
+               <option value ="luxe">Luxe</option>
+            </Form.Control>
             </Form.Group>
 
             <Form.Group controlId="formGroupPassword">
@@ -277,25 +401,21 @@ onChangeCB(event) {
                     name="hebergementType"
                     type="text"
                     onChange={this.onChange} />
-            </Form.Group>
 
+            </Form.Group>
+            
             <Form.Group controlId="formGroupPassword">
             <Form.Label>Pension</Form.Label>
-            <Form.Control 
-                    placeholder= "indiférent,sansrepas,petitdej,demi"
-                    name="name"
-                    type="text"
-                    onChange={this.onChange} />
+            <Form.Control as="select" onChange={this.onChange} name="pensions">
+            <option >...</option>
+               <option value ="indiférent">Indifférent</option>
+               <option value ="sans_repas">Sans repas dans les hotels</option>
+               <option value ="petit_dej">Petit dejeuner dans les hôtels</option>
+               <option value ="demi_pension">Demi Pension</option>
+            </Form.Control>
             </Form.Group>
 
-            <Form.Group controlId="formGroupPassword">
-            <Form.Label>Transport</Form.Label>
-            <Form.Control 
-                    placeholder= "navette,taxicollectif,locvoiture,busferry"
-                    name="name"
-                    type="text"
-                    onChange={this.onChange} />
-            </Form.Group>
+           
 
             <Form.Group controlId="formGroupPassword">
             <Form.Label>Accompagné ?</Form.Label>
@@ -306,18 +426,115 @@ onChangeCB(event) {
             </Form.Group>
 
             <Form.Group controlId="formGroupPassword">
+            <Form.Label>Transport aeroport (navette publique)</Form.Label>
+            <Form.Control 
+                    name="T1"
+                    type="checkbox"
+                    onChange={this.onChangeCB} />
+            
+            <Form.Label>Transport aeroport (taxicollectif)</Form.Label>
+            <Form.Control 
+                    name="T2"
+                    type="checkbox"
+                    onChange={this.onChangeCB} />
+            <Form.Label>Location de voiture</Form.Label>
+            <Form.Control 
+                    name="T3"
+                    type="checkbox"
+                    onChange={this.onChangeCB} />
+            
+            <Form.Label>Bus,ferry..</Form.Label>
+            <Form.Control 
+                    name="T4"
+                    type="checkbox"
+                    onChange={this.onChangeCB} />
+
             <Form.Label>Musee</Form.Label>
             <Form.Control 
-                    name="musees"
+                    name="A1"
                     type="checkbox"
                     onChange={this.onChangeCB} />
             <Form.Label>Temple</Form.Label>
             <Form.Control 
-                    placeholder= "temple"
-                    name="temples"
+                    name="A2"
                     type="checkbox"
                     onChange={this.onChangeCB} />
+
+            <Form.Label>Sites historiques</Form.Label>
+            <Form.Control 
+                    name="A3"
+                    type="checkbox"
+                    onChange={this.onChangeCB} />
+            
+            <Form.Label>Jardins</Form.Label>
+            <Form.Control 
+                    name="A4"
+                    type="checkbox"
+                    onChange={this.onChangeCB} />
+
+            <Form.Label>Parcs</Form.Label>
+            <Form.Control 
+                    name="A5"
+                    type="checkbox"
+                    onChange={this.onChangeCB} />
+
+            <Form.Label>Artisanat</Form.Label>
+            <Form.Control 
+                    name="A6"
+                    type="checkbox"
+                    onChange={this.onChangeCB} />
+
+            <Form.Label>Architecture Urbaine</Form.Label>
+            <Form.Control 
+                    name="A7"
+                    type="checkbox"
+                    onChange={this.onChangeCB} />
+
+            <Form.Label>Art contemporain</Form.Label>
+            <Form.Control 
+                    name="A8"
+                    type="checkbox"
+                    onChange={this.onChangeCB} />
+            
+            <Form.Label>Campagne</Form.Label>
+            <Form.Control 
+                    name="A9"
+                    type="checkbox"
+                    onChange={this.onChangeCB} />
+
+            <Form.Label>Randonnée</Form.Label>
+            <Form.Control 
+                    name="A10"
+                    type="checkbox"
+                    onChange={this.onChangeCB} />
+
+            <Form.Label>Pelrinage</Form.Label>
+            <Form.Control 
+                    name="A11"
+                    type="checkbox"
+                    onChange={this.onChangeCB} />
+
+            <Form.Label>Vélo</Form.Label>
+            <Form.Control 
+                    name="A12"
+                    type="checkbox"
+                    onChange={this.onChangeCB} />
+
+            <Form.Label>Football</Form.Label>
+            <Form.Control 
+                    name="A13"
+                    type="checkbox"
+                    onChange={this.onChangeCB} />
+            
+            <Form.Label>Plongée</Form.Label>
+            <Form.Control 
+                    name="A14"
+                    type="checkbox"
+                    onChange={this.onChangeCB} />
+
             </Form.Group>
+
+            
 
             <Form.Group controlId="formGroupPassword">
             <Form.Label>Infos sur le client</Form.Label>
@@ -336,12 +553,21 @@ onChangeCB(event) {
                     name="prenomClient"
                     type="text"
                     onChange={this.onChange} />
+            
+            </Form.Group>
+            <Form.Group controlId="formGroupPassword">
             <Form.Label>Test Covid négatif</Form.Label>
+            
             <Form.Control 
                     name="testCovid"
                     type="checkbox"
                     onChange={this.onChange} />
+
             </Form.Group>
+            
+            
+            
+            
 
         </Form>
       

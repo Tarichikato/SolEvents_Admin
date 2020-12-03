@@ -1,77 +1,152 @@
 import React, { Component } from 'react';
-import { Navbar, Nav, NavDropdown, Form,  FormControl, Button, InputGroup, Card} from 'react-bootstrap';
+import { Navbar, Nav, NavDropdown, Form,  FormControl, Button, InputGroup, Card, ButtonGroup} from 'react-bootstrap';
 import NavBar from './../assets/NavBar';
-
 
 
 export class Home extends Component {
 
-    state = {
-    }
+  
 
-    constructor(props) {
-        super(props);
 
-        this.onChange = this.onChange.bind(this);
-        this.onSubmit = this.onSubmit.bind(this);
-    }
+constructor(props) {
+    super(props);
 
-render() {
-  return (
-    <div className="App">
+    
+    this.onSubmitRenderVoyages = this.onSubmitRenderVoyages.bind(this);
+    this.onSubmitCreateVoyage = this.onSubmitCreateVoyage.bind(this);
+    this.onSubmitRenderVoyagesFaits = this.onSubmitRenderVoyagesFaits.bind(this);
+
+    this.onSubmitRenderOwners = this.onSubmitRenderOwners.bind(this);
+    this.onSubmitActions = this.onSubmitActions.bind(this);
+    this.onSubmitAddAddress = this.onSubmitAddAddress.bind(this);
+
+
+}
+
+    render() {
+        return(
+            <div className="App">
       <header>
-        <NavBar/>
+       <NavBar/>
       </header>
+
       <div className="container">
         <div className="row mt-5">
-            <div className="col-lg-4 mb-4 grid-margin">
+            <div className="col-lg-10 mb-4 grid-margin">
               <div className="card h-100">
-                  <h4 className="card-header">About us</h4>
+                  <h4 className="card-header">Choisissez une fonction</h4>
                   <div className="card-body">
-                    <p className="card-text">Nous sommes étudiants à Télécom Sud Paris et nous avons conçu cette application full stack dans le cadre du module PRO3600.</p>
+                    <p className="card-text">Avec cette application, vous avez la possibilité de choisir ce que vous voulez faire. Choisissez une fonction ci-dessous. </p>
                   </div>
               </div>
             </div>
-            <div className="col-lg-4 mb-4 grid-margin">
-              <div className="card h-100">
-                  <h4 className="card-header">About this application</h4>
-                  <div className="card-body">
-                    <p className="card-text">Cette application permet de stocker et consulter des diplômes dans la blockchain Ethereum</p>
-                  </div>
-              </div>
-            </div>
-            <div className="col-lg-4 mb-4 grid-margin">
-              <div className="card h-100">
-                  <h4 className="card-header">About Blockchain</h4>
-                  <div className="card-body">
-                    <p className="card-text">Cette application a été déployée sur la blockchain Ethereum : immuable, infalsifiable et décentralisée.</p>
-                  </div>
-              </div>
-            </div>
-        </div>
+        </div>    
       </div>
 
-      <div>
+    <div>
+      <div className="container">
+        <div className="row mt-5">
+          <div className="col-lg-4 mb-4 grid-margin">
+        <Card className="bg-dark text-white">
+            <Card.Header as="h5">Voyages</Card.Header>
+            <Card.Body>
+                <Card.Title>Ces fonctions concernent les voyages</Card.Title>
+                <Card.Text>
+                  Choisissez une des fonctions ci-dessous :  
+                </Card.Text>
+
+                <ButtonGroup vertical >
                 <Button variant="primary" 
-                    onClick={this.onSubmit}
-                    >Accéder à l'application</Button>
+                    onClick={this.onSubmitRenderVoyages}
+                    >Voir les voyages non faits
+                </Button>
+                <Button variant="light" 
+                    onClick={this.onSubmitCreateVoyage}
+                    >Ajouter un voyage
+                </Button>
+                <Button variant="primary" 
+                    onClick={this.onSubmitRenderVoyagesFaits}
+                    >Voir les voyages passés
+                </Button>
+                </ButtonGroup>
+
+            </Card.Body>
+        </Card>
+        </div>
+        
+        <div className="col-lg-4 mb-4 grid-margin">
+          <Card className="bg-dark text-white">
+            <Card.Header as="h5">Administration</Card.Header>
+            <Card.Body>
+                <Card.Title>Ces fonction concernent l'administratif</Card.Title>
+                <Card.Text>
+                  Choisissez une des fonctions ci-dessous :
+                </Card.Text>
+                <ButtonGroup vertical >
+                <Button variant="primary" 
+                    onClick={this.onSubmitActions}
+                    >Actions sur les voyages
+                </Button>
+                <Button variant="light" 
+                    onClick={this.onSubmitRenderOwners}
+                    >Voir les adresses autorisées
+                </Button>
+                <Button variant="primary" 
+                    onClick={this.onSubmitAddAddress}
+                    >Editer les adresses autorisées
+                </Button>
+                </ButtonGroup>
+            </Card.Body>
+        </Card>
+        
         </div> 
+       
+
+      </div>
     </div>
-    
-    );
-  
+    </div>
+
+</div>
+
+        );
     }
 
-    onChange(event) {
-        this.setState({address: event.target.value});
-    }
 
-    onSubmit(event) {
-        event.preventDefault();
-        this.props.history.push(`/RoleChoice/${this.state.address}`)
-    }
+onSubmitRenderVoyages(event) {
+    event.preventDefault();
+    window.location.href = "/RenderVoyages"; 
+    //this.props.history.push('/RenderVoyages')
+}
+
+  onSubmitCreateVoyage(event) {
+    event.preventDefault();
+    window.location.href = "/CreateVoyage"; 
+    //this.props.history.push(`/CreateVoyage`)
+}
+
+onSubmitRenderVoyagesFaits(event) {
+  event.preventDefault();
+  window.location.href = "/RenderVoyagesFaits"; 
 }
 
 
-export default Home;
+onSubmitActions(event) {
+    event.preventDefault();
+    window.location.href = "/Actions"; 
+}
 
+onSubmitRenderOwners(event) {
+  event.preventDefault();
+  window.location.href = "/RenderAddresses";
+}
+
+onSubmitAddAddress(event) {
+  event.preventDefault();
+  window.location.href = "/AddAddress";
+}
+
+
+
+}
+
+export default Home;

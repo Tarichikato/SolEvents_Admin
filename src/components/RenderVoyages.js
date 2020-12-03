@@ -11,6 +11,7 @@ export class RenderVoyages extends Component {
         contract:''
     }
   async componentDidMount () {
+    console.log('RV')
     await this.getVoyages()
   }
   async getVoyages() {
@@ -23,6 +24,16 @@ export class RenderVoyages extends Component {
 
     for (var i = 1; i <= voyagesCount; i++) {
         var voyage = await contract.methods.voyages(i).call()
+        var client = await contract.methods.tokens(i).call()
+        voyage.nomClient = client.nom
+        voyage.prenomClient = client.prenom
+        voyage.idClient = client.id
+        if(voyage.envies2%41 == 0){
+          console.log("Le debut de la fin")
+        }
+        else{
+          console.log("Et ca aussi")
+        }
         if(voyage.valid == true && voyage.fait == false){
           voyage = this.translate(voyage)
             this.setState({
@@ -34,7 +45,6 @@ export class RenderVoyages extends Component {
 
 
   translate(voyage) {
-
     //Dates
     const debut = voyage.debutSejour.toString().split('')
     const fin = voyage.finSejour.toString().split('')
@@ -132,19 +142,20 @@ constructor(props) {
         
     <tr>
     <th scope="col">id</th>
-      <th scope="col">debutSejour</th>
-      <th scope="col">finSejour</th>
-      <th scope="col">Adultes</th>
-      <th scope="col">Enfants</th>
-      <th scope="col">Bébés</th>
-      <th scope="col">pays</th>
-      <th scope="col">ville</th>
-      <th scope="col">hebergementType</th>
-      <th scope="col">accompagnement</th>
-      <th scope="col">envies</th>
-      <th scope="col">editeur</th>
-      <th scope="col">testCovid</th>
-      <th scope="col">fait</th>
+    <th scope="col">Nom</th>
+    <th scope="col">Prenom</th>
+    <th scope="col">debutSejour</th>
+    <th scope="col">finSejour</th>
+    <th scope="col">Adultes</th>
+    <th scope="col">Enfants</th>
+    <th scope="col">Bébés</th>
+    <th scope="col">pays</th>
+    <th scope="col">ville</th>
+    <th scope="col">hebergementType</th>
+    <th scope="col">accompagnement</th>
+    <th scope="col">envies</th>
+    <th scope="col">editeur</th>
+    <th scope="col">testCovid</th>
 
     </tr>
 
@@ -158,6 +169,32 @@ constructor(props) {
               <div key={key}>
                 <td>
                   {key + 1}
+                </td>
+              </div>
+              
+             )
+          })}
+      </th>
+      <th scope="row">
+          { this.state.voyages.map((voyage, key) => {
+            return(
+              
+              <div key={key}>
+                <td>
+                  {voyage.nomClient}
+                </td>
+              </div>
+              
+             )
+          })}
+      </th>
+      <th scope="row">
+          { this.state.voyages.map((voyage, key) => {
+            return(
+              
+              <div key={key}>
+                <td>
+                  {voyage.prenomClient}
                 </td>
               </div>
               
@@ -311,23 +348,7 @@ constructor(props) {
               
                  )
         })}
-    </td>
-    <td> 
-      { this.state.voyages.map((voyage, key) => {
-            return(
-              <div key={key}>
-                <td>
-                  {voyage.fait}
-              </td>
-            </div> 
-              
-                 )
-        })}
-    </td>
-
-
-    
-      
+    </td>   
     </tr>
   </tbody>
 </table>
